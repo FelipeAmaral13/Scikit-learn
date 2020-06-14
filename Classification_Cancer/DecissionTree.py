@@ -2,7 +2,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
+from sklearn.tree import tree
 from sklearn.metrics import confusion_matrix, auc, roc_curve, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
@@ -32,16 +32,14 @@ x_train = scaler.fit_transform(x_train)
 x_test = scaler.transform(x_test)
 
 #Modelo
-clf = LogisticRegression()
+clf = tree.DecisionTreeClassifier()
 
-
-params = {'penalty': ['l1', 'l2', 'elasticnet'],
-          'solver':['newton-cg', 'lbfgs', 'sag', 'saga']}
+params = {'criterion': ['gini', 'entropy'],
+          'splitter' : ['best', 'random']}
 
 grid = GridSearchCV(estimator = clf,   
                     param_grid = params, 
                     cv = 20)
-
 
 #Treino
 grid.fit(x_train, y_train)
@@ -59,4 +57,4 @@ y_preds = grid.predict(x_test)
 print(confusion_matrix(y_test, y_preds))
 fpr, tpr, thresholds = roc_curve(y_test, y_preds)
 auc(fpr, tpr)
-roc_auc_score(y_test, y_preds)s
+roc_auc_score(y_test, y_preds)

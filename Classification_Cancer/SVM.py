@@ -3,7 +3,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn import svm
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, auc, roc_curve, roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
 #DataFrame
@@ -11,6 +11,9 @@ df = pd.read_csv('cancer.csv')
 print(len(df.columns))
 
 df.head()
+
+df['diagnosis'] = df['diagnosis'].map({'M': 1, 'B': 0})
+
 
 #Pre-analise
 df.drop(['id'], axis=1, inplace=True)
@@ -52,3 +55,6 @@ y_preds = grid.predict(x_test)
 
 #Metrica
 print(confusion_matrix(y_test, y_preds))
+fpr, tpr, thresholds = roc_curve(y_test, y_preds)
+auc(fpr, tpr)
+roc_auc_score(y_test, y_preds)
